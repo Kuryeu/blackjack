@@ -7,7 +7,6 @@ import random
 
 from JeuDeCarte import JeuDeCarte
 
-
 def coups_possible(main_joueur, historique_coups, main_croupier, nombre_main_joueur):
     liste_coups_possible = ["Arreter"]
     is_as = False

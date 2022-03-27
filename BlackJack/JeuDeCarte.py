@@ -18,7 +18,7 @@ class JeuDeCarte:
                   ['valet de coeur', 10], ['valet de pique', 10], ['valet de carreau', 10], ['valet de trefle', 10],
                   ['dame de coeur', 10], ['dame de pique', 10], ['dame de carreau', 10], ['dame de trefle', 10],
                   ['roi de coeur', 10], ['roi de pique', 10], ['roi de carreau', 10], ['roi de trefle', 10],
-                  ['as de coeur', [0,10]], ['as de pique', [0,10]], ['as de carreau', [0,10]], ['as de trefle', [0,10]]]
+                  ['as de coeur', [1,10]], ['as de pique', [1,10]], ['as de carreau', [1,10]], ['as de trefle', [1,10]]]
 
     def tirer_carte(self):
         return self.cartes[-1]
