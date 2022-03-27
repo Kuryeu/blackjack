@@ -89,4 +89,14 @@ main_joueur = [['as de pique', [1,10]], ['6 de carreau', 6]]
 
 
 
+"""
+-> Initialiser jeu de carte 
+-> Initialiser joueurs + dealer
+
+-> Ordre de jeu
+
+"""
+
+
+
 
