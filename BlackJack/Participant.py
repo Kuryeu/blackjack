@@ -16,4 +16,4 @@ class Participant :
             self.point[1] += self.main[-1][1]
         else: #cas de l'as
             self.point[0] += self.main[-1][1][0]
-            self.point[1] += self.main[-1][1][0]
+            self.point[1] += self.main[-1][1][1]
