@@ -2,10 +2,12 @@ import random
 
 class JeuDeCarte:
 
-    def __init__(self, cartes):
-        self.cartes = cartes
+    def __init__(self):
+        self.create_cartes_set()
+        self.melanger_cartes()
 
-    def create_cartes_set (self):
+
+    def create_cartes_set(self):
         self.cartes = [['2 de coeur', 2], ['2 de pique', 2], ['2 de carreau', 2], ['2 de trefle', 2],
                   ['3 de coeur', 3], ['3 de pique', 3], ['3 de carreau', 3], ['3 de trefle', 3],
                   ['4 de coeur', 4], ['4 de pique', 4], ['4 de carreau', 4], ['4 de trefle', 4],
@@ -20,13 +22,15 @@ class JeuDeCarte:
                   ['roi de coeur', 10], ['roi de pique', 10], ['roi de carreau', 10], ['roi de trefle', 10],
                   ['as de coeur', [1,10]], ['as de pique', [1,10]], ['as de carreau', [1,10]], ['as de trefle', [1,10]]]
 
+
+
     def tirer_carte(self):
         return self.cartes[-1]
 
     def melanger_cartes(self):
         random.shuffle(self.cartes)
-        print("le jeu a été mélangé : "+str(self.cartes))
+        print("le jeu a été mélangé : " + str(self.cartes))
 
     def bruler_carte(self):
-        self.cartes.remove(self.cartes[0])
+        self.cartes.remove(self.cartes[-1])
         print("Une carte a été brûlée")

@@ -3,13 +3,14 @@ from JeuDeCarte import JeuDeCarte
 
 class BlackJack:
 
-    def coups_possible(self, main_joueur, historique_coups, main_croupier, nombre_main_joueur):
+    @staticmethod # A modifier quand on aura la classe joueur et croupier
+    def coups_possible(main_joueur, historique_coups, main_croupier, nombre_main_joueur):
         liste_coups_possible = ["Arreter"]
         is_as = False
         nombre_as = 0
         for carte in main_joueur:
-            if carte[0][:2]=='as':
-                nombre_as+=1
+            if carte[0][:2] == 'as':
+                nombre_as += 1
                 is_as = True
 
         ##### Doubler la mise
@@ -24,14 +25,14 @@ class BlackJack:
                 else:
                     s1 += carte[1]
                     s2 += carte[1]
-            if s1!=21 and s2!=21:
+            if s1 != 21 and s2 != 21:
                 if "Partager_pair_as" not in historique_coups:
                     liste_coups_possible.append("Doubler")
         else:
             s = 0
             for carte in main_joueur:
                 s += carte[1]
-            if s!=21:
+            if s!= 21:
                 if "Partager_pair_as" not in historique_coups:
                     liste_coups_possible.append("Doubler")
 
@@ -44,22 +45,22 @@ class BlackJack:
              else:
                 s = 0
                 for carte in main_joueur:
-                    if carte[0][:2]=='as':
-                        s+=1
+                    if carte[0][:2] == 'as':
+                        s += 1
                     else:
-                        s+=carte[1]
-                if s != 21 and "Partage_pair_as" not in historique_coups and nombre_main_joueur<4:
+                        s += carte[1]
+                if s != 21 and "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
                     liste_coups_possible.append("Partager")
         else:
             if main_joueur[0][1] == main_joueur[1][1]:
-                if "Partage_pair_as" not in historique_coups and nombre_main_joueur<4:
+                if "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
                     liste_coups_possible.append("Partager")
 
         ##### Assurer
 
         croupier_a_as = False
         for carte in main_croupier:
-            if carte[0][:2]=='as':
+            if carte[0][:2] == 'as':
                 croupier_a_as = True
 
         if croupier_a_as:
@@ -67,11 +68,11 @@ class BlackJack:
 
         ##### Tirer
 
-        if "Partage_pair_as" not in historique_coups :
-            if "Arreter" not in historique_coups :
+        if "Partage_pair_as" not in historique_coups:
+            if "Arreter" not in historique_coups:
                 liste_coups_possible.append("Tirer_plusieurs_cartes")
         else:
-            if "Arreter" not in historique_coups :
+            if "Arreter" not in historique_coups:
                 liste_coups_possible.append("Tirer_une_carte")
 
         return liste_coups_possible
@@ -81,8 +82,8 @@ class BlackJack:
 
 ############### MAIN ###############
 
-cartes = []
-jeuDeCarte1 = JeuDeCarte(cartes)
+
+jeuDeCarte1 = JeuDeCarte()
 jeuDeCarte1.create_cartes_set()
 
 main_joueur = [['as de pique', [1,10]], ['6 de carreau', 6]]
@@ -94,7 +95,6 @@ main_joueur = [['as de pique', [1,10]], ['6 de carreau', 6]]
 -> Initialiser joueurs + dealer
 
 -> Ordre de jeu
-
 """
 
 
