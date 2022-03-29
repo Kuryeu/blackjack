@@ -3,6 +3,10 @@ from JeuDeCarte import JeuDeCarte
 
 class BlackJack:
 
+    def __init__(self, listeJoueur):
+        pass
+
+
     @staticmethod # A modifier quand on aura la classe joueur et croupier
     def coups_possible(main_joueur, historique_coups, main_croupier, nombre_main_joueur):
         liste_coups_possible = ["Arreter"]
@@ -78,7 +82,14 @@ class BlackJack:
         return liste_coups_possible
 
 
+    def initialisation_Partie(self, nb_Joueur):# Brice
+        pass
 
+    def deroulement_Partie(self): # Brice
+        pass
+
+    def attribution_Recompense(self): # Paul
+        pass
 
 ############### MAIN ###############
 
