@@ -1,10 +1,15 @@
-
+from Croupier import Croupier
 from JeuDeCarte import JeuDeCarte
+from Joueur import Joueur
+from Participant import Participant
+
 
 class BlackJack:
 
-    def __init__(self, listeJoueur):
-        pass
+    def __init__(self, listeJoueurs, croupier, jeuDeCarte):
+        self.listeJoueurs = listeJoueurs
+        self.croupier = croupier
+        self.jeuDeCarte = jeuDeCarte
 
 
     @staticmethod # A modifier quand on aura la classe joueur et croupier
@@ -83,10 +88,49 @@ class BlackJack:
 
 
     def initialisation_Partie(self, nb_Joueur):# Brice
-        pass
+        if nb_Joueur<=0 or nb_Joueur>7:
+            print("Veuillez entrer un nombre de joueur valide (entre 1 et 7 joueur(s)")
+            return
+        listeJoueurs = []
+        for i in range (nb_Joueur):
+            joueur = Participant()
+            listeJoueurs.append(joueur)
+        croupier = Croupier()
+        jeuDeCarte = JeuDeCarte()
+        blackJack = BlackJack(listeJoueurs, croupier, jeuDeCarte)
+        return blackJack
 
-    def deroulement_Partie(self): # Brice
-        pass
+    def deroulement_Partie(self, blackJack): # Brice
+        blackJack.croupier.comportement(blackJack.jeuDeCarte)
+        for joueur in blackJack.listeJoueurs:
+            joueur.tirer(blackJack.jeuDeCarte)
+            joueur.tirer(blackJack.jeuDeCarte)
+            ### Action Joueur
+        blackJack.croupier.comportement(blackJack.jeuDeCarte)
+
+    def points_count(self, joueur):
+        point_mains = []
+        for hand in joueur.main:
+            points = 0
+            for carte in hand:
+                if carte[0][:2] == 'as':
+                    if points + 11 > 21:
+                        points += 1
+                    else:
+                        points += 11
+                else:
+                    points += carte[1]
+            point_mains.append(points)
+        return point_mains
+
+    def resultat(self, points_main, points_croupier):
+        for points in points_main:
+            if points == 21:
+                return "blackJack"
+            if points > points_croupier and points<21:
+                return "gagner"
+            return "perdu"
+
 
     def attribution_Recompense(self): # Paul
         pass
