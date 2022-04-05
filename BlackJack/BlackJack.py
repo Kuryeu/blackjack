@@ -1,15 +1,25 @@
-from Croupier import Croupier
+
 from JeuDeCarte import JeuDeCarte
 from Joueur import Joueur
-from Participant import Participant
-
+from Croupier import Croupier
 
 class BlackJack:
 
-    def __init__(self, listeJoueurs, croupier, jeuDeCarte):
-        self.listeJoueurs = listeJoueurs
-        self.croupier = croupier
-        self.jeuDeCarte = jeuDeCarte
+    def __init__(self,nbjoueurs):
+
+        #Instanciation des joueurs
+        self.listeParticipants=[]
+        for i in range(nbjoueurs):
+            self.listeParticipants.append(Joueur())
+
+        #Instanciation du croupier qui jouera en dernier
+        self.listeParticipants.append(Croupier())
+
+        self.initialisation_Partie()
+        self.deroulement_Partie()
+
+        #Boucle infinie
+        #   Initialisation de la partie
 
 
     @staticmethod # A modifier quand on aura la classe joueur et croupier
@@ -23,7 +33,6 @@ class BlackJack:
                 is_as = True
 
         ##### Doubler la mise
-
         if is_as:
             s1 = 0
             s2 = 0
@@ -32,15 +41,15 @@ class BlackJack:
                     s1 += 1
                     s2 += 10
                 else:
-                    s1 += carte[1]
-                    s2 += carte[1]
+                    s1 += carte[1][0]
+                    s2 += carte[1][0]
             if s1 != 21 and s2 != 21:
                 if "Partager_pair_as" not in historique_coups:
                     liste_coups_possible.append("Doubler")
         else:
             s = 0
             for carte in main_joueur:
-                s += carte[1]
+                s += carte[1][0]
             if s!= 21:
                 if "Partager_pair_as" not in historique_coups:
                     liste_coups_possible.append("Doubler")
@@ -57,7 +66,7 @@ class BlackJack:
                     if carte[0][:2] == 'as':
                         s += 1
                     else:
-                        s += carte[1]
+                        s += carte[1][0]
                 if s != 21 and "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
                     liste_coups_possible.append("Partager")
         else:
@@ -86,72 +95,81 @@ class BlackJack:
 
         return liste_coups_possible
 
+    #Appliquer l'action choisit par le participant en fonction des règles du blackjack
+    def appliquer_Action(self,participant):
+        if (participant.action=="Doubler"):
+            pass
+        elif (participant.action=="Arreter"):
+            participant.stop=True
+        elif (participant.action=="Tirer_plusieurs_cartes" or participant.action=="Tirer_une_carte"):
+            participant.tirer(self.jeuDeCarte)
+        elif (participant.action=="Partager"):
+            pass
+        elif (participant.action=="Partager_pair_as"):
+            pass
+        elif (participant.action=="Partager_pair_as"):
+            pass        
+        
+    def checkCardsValue(self,participant):
+        if(participant.point[1]>21):
+            if(participant.point[0]>21):
+                #Le participant a bust
+                participant.gamestate=2
 
-    def initialisation_Partie(self, nb_Joueur):# Brice
-        if nb_Joueur<=0 or nb_Joueur>7:
-            print("Veuillez entrer un nombre de joueur valide (entre 1 et 7 joueur(s)")
-            return
-        listeJoueurs = []
-        for i in range (nb_Joueur):
-            joueur = Participant()
-            listeJoueurs.append(joueur)
-        croupier = Croupier()
-        jeuDeCarte = JeuDeCarte()
-        blackJack = BlackJack(listeJoueurs, croupier, jeuDeCarte)
-        return blackJack
+    def initialisation_Partie(self):
+        #1- Initialisation jeu de carte
+        self.jeuDeCarte = JeuDeCarte()
 
-    def deroulement_Partie(self, blackJack): # Brice
-        blackJack.croupier.comportement(blackJack.jeuDeCarte)
-        for joueur in blackJack.listeJoueurs:
-            joueur.tirer(blackJack.jeuDeCarte)
-            joueur.tirer(blackJack.jeuDeCarte)
-            ### Action Joueur
-        blackJack.croupier.comportement(blackJack.jeuDeCarte)
-
-    def points_count(self, joueur):
-        point_mains = []
-        for hand in joueur.main:
-            points = 0
-            for carte in hand:
-                if carte[0][:2] == 'as':
-                    if points + 11 > 21:
-                        points += 1
-                    else:
-                        points += 11
-                else:
-                    points += carte[1]
-            point_mains.append(points)
-        return point_mains
-
-    def resultat(self, points_main, points_croupier):
-        for points in points_main:
-            if points == 21:
-                return "blackJack"
-            if points > points_croupier and points<21:
-                return "gagner"
-            return "perdu"
+        #2- Distribution de deux cartes face visible à chaque joueur
+        for participant in self.listeParticipants[:-1]:
+            participant.tirer(self.jeuDeCarte)
+            participant.tirer(self.jeuDeCarte)
+        
+        #3- Distribution d'une carte visible au croupier
+        self.listeParticipants[-1].tirer(self.jeuDeCarte)
 
 
-    def attribution_Recompense(self): # Paul
+    def deroulement_Partie(self):
+        result=[]
+        #Tant qu'il reste des participants qui jouent
+        while(self.listeParticipants[:-1]):
+            #Pour chaque joueur de la table
+            #A tour de rôle, les joueurs effectuent des actions
+            for participant in self.listeParticipants[:-1]:
+                #Définition des actions possibles
+                participant.actions=BlackJack.coups_possible(participant.main,[], self.listeParticipants[-1].main,0)
+                #Choix d'une action par le joueur
+
+                #Choix d'une action aléatoire par le joueur
+                participant.comportement_aleatoire()
+                #Ajout de l'action dans l'historique du joueur
+                participant.historique.append(participant.action)
+                #L'action est joué
+                self.appliquer_Action(participant)
+                #On check la valeur des cartes pour savoir si le joueur n'a pas dépassé 21
+                self.checkCardsValue(participant)
+
+            #On enlève de la liste les joueurs ayant dépassé 21 OU ayant souhaité se coucher
+            temp=self.listeParticipants[:-1].copy()
+            for participant in self.listeParticipants[:-1]:
+                if(participant.gamestate==2 or participant.stop==True):
+                    result.append(participant)
+                    temp.remove(participant)
+            self.listeParticipants[:-1]=temp
+
+        self.listeParticipants[:-1]=result
+
+        #On fait ensuite jouer le croupier
+        while(self.listeParticipants[-1].gamestate!=2 and self.listeParticipants[-1].stop==False):
+            self.listeParticipants[-1].comportement()
+
+            if(self.listeParticipants[-1].gamestate!=2 and self.listeParticipants[-1].stop==False):
+                self.appliquer_Action(self.listeParticipants[-1])
+                self.listeParticipants[-1].historique.append(self.listeParticipants[-1].action)
+
+        #On gère la distribution des récompenses à chaque joueur
+        self.listeParticipants[-1].distributionJeton(self.listeParticipants[:-1])
         pass
-
-############### MAIN ###############
-
-
-jeuDeCarte1 = JeuDeCarte()
-jeuDeCarte1.create_cartes_set()
-
-main_joueur = [['as de pique', [1,10]], ['6 de carreau', 6]]
-
-
-
-"""
--> Initialiser jeu de carte 
--> Initialiser joueurs + dealer
-
--> Ordre de jeu
-"""
-
 
 
 

@@ -2,23 +2,31 @@
 class Participant :
 
     def __init__(self):
-        self.main = [[]]
+        #Main courante du participant
+        self.main = []
+        #Historique des mains du participant
         self.historique = []
         self.point = [0, 0] #deux valeurs pour les valeurs de l'as
-        self.mise = 30
+        #Les actions courantes du participant
+        self.actions=[]
+        #L'action courante choisie par le participant
+        self.action=""
+        #Int indiquant si le participant a gagné(1) ou perdu(2)
+        self.gamestate=0
+        #Booléen indiquant que le joueur souhaite arrêté
+        self.stop=False        
 
-    def tirer(self, jeu_de_carte, num_main):
-        self.main[num_main].append(jeu_de_carte.tirer_carte())
+    def tirer(self, jeu_de_carte):
+        self.main.append(jeu_de_carte.tirer_carte())
         self.ajouter_point()
 
     def ajouter_point(self):
-        for hand in self.main:
-            if len(hand[-1][1]) == 0:
-                self.point[0] += hand[-1][1]
-                self.point[1] += hand[-1][1]
-            else: #cas de l'as
-                self.point[0] += hand[-1][1][0]
-                self.point[1] += hand[-1][1][1]
+        if len(self.main[-1][1]) == 1:
+            self.point[0] += self.main[-1][1][0]
+            self.point[1] += self.main[-1][1][0]
+        else: #cas de l'as
+            self.point[0] += self.main[-1][1][0]
+            self.point[1] += self.main[-1][1][1]
 
     def rester(self):
         print("le joueur reste")
@@ -50,5 +58,3 @@ class Participant :
         #quitter la game
         print("le joueur abandonne")
         return "le joueur abandonne"
-
-

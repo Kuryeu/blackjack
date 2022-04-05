@@ -1,0 +1,7 @@
+boucle de jeu du black jack
+Faire jouer le joueur parmi un set d'action
+Au bout d'un certain, switch le joueur en mode intelligent qui prendra en compte les anciennes parties
+Sauvegarder la matrice d'expérience  du joueur
+
+
+
