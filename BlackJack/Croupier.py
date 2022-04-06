@@ -6,7 +6,7 @@ class Croupier(Participant):
 
         def comportement(self, jeu_de_carte):
 
-            if len(self.main) in [0, 1]:
+            if len(self.main[0]) in [0, 1]:
                 self.tirer(jeu_de_carte)
             elif max(self.point[0], self.point[1]) < 17:
                 self.tirer(jeu_de_carte)

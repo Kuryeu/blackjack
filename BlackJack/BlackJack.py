@@ -86,11 +86,11 @@ class BlackJack:
 
         return liste_coups_possible
 
-
-    def initialisation_Partie(self, nb_Joueur):# Brice
+    @staticmethod
+    def initialisation_Partie(nb_Joueur):# Brice
         if nb_Joueur<=0 or nb_Joueur>7:
             print("Veuillez entrer un nombre de joueur valide (entre 1 et 7 joueur(s)")
-            return
+            return None
         listeJoueurs = []
         for i in range (nb_Joueur):
             joueur = Participant()
@@ -100,13 +100,15 @@ class BlackJack:
         blackJack = BlackJack(listeJoueurs, croupier, jeuDeCarte)
         return blackJack
 
-    def deroulement_Partie(self, blackJack): # Brice
-        blackJack.croupier.comportement(blackJack.jeuDeCarte)
-        for joueur in blackJack.listeJoueurs:
-            joueur.tirer(blackJack.jeuDeCarte)
-            joueur.tirer(blackJack.jeuDeCarte)
+    def deroulement_Partie(self): # Brice
+        self.croupier.comportement(self.jeuDeCarte)
+        for joueur in self.listeJoueurs:
+            joueur.tirer(self.jeuDeCarte)
+            joueur.tirer(self.jeuDeCarte)
             ### Action Joueur
-        blackJack.croupier.comportement(blackJack.jeuDeCarte)
+        self.croupier.comportement(self.jeuDeCarte)
+        for joueur in self.listeJoueurs:
+            return self.resultat(self.points_count(joueur), self.points_count(self.croupier))
 
     def points_count(self, joueur):
         point_mains = []
@@ -142,6 +144,8 @@ jeuDeCarte1 = JeuDeCarte()
 jeuDeCarte1.create_cartes_set()
 
 main_joueur = [['as de pique', [1,10]], ['6 de carreau', 6]]
+
+
 
 
 

@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f418dfe2-8d1a-492a-992e-11d4f26f6e8e" name="Changes" comment="" />
+    <list default="true" id="f418dfe2-8d1a-492a-992e-11d4f26f6e8e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlackJack.py" beforeDir="false" afterPath="$PROJECT_DIR$/BlackJack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Croupier.py" beforeDir="false" afterPath="$PROJECT_DIR$/Croupier.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,9 +40,9 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../uqac_tp3IA_RobotSauveVie" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../UQAC_SL_translator" />
   </component>
-  <component name="RunManager" selected="Python.BlackJack">
+  <component name="RunManager" selected="Python.main">
     <configuration name="BlackJack" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BlackJack" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -128,6 +133,7 @@
       <workItem from="1648576027458" duration="1866000" />
       <workItem from="1649084132809" duration="7512000" />
       <workItem from="1649127191843" duration="1062000" />
+      <workItem from="1649168357494" duration="5659000" />
     </task>
     <servers />
   </component>
@@ -146,6 +152,7 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/BlackJack$main.coverage" NAME="main Coverage Results" MODIFIED="1649172993011" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/BlackJack$BlackJack.coverage" NAME="BlackJack Coverage Results" MODIFIED="1649098806050" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

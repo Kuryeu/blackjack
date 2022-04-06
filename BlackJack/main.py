@@ -16,6 +16,7 @@ historique_coup = []
 main_croupier = [['roi de pique', 10], ['6 de carreau', 6]]
 
 print(BlackJack.coups_possible(main_joueur, historique_coup, main_croupier, 1))
+BlackJack.initialisation_Partie(3).deroulement_Partie()
 
 #Faire la génération de plein de partie pour remplir la matrice du joueur
 
