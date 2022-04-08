@@ -17,6 +17,28 @@ class BlackJack:
         #Boucle infinie
         #   Initialisation de la partie
 
+    @staticmethod
+    def is_pair(carte1, carte2):
+        id1 = ''
+        id2 = ''
+        for i in range(len(carte1[0])):
+            id1 += carte1[0][i]
+            if i > 1:
+                ch = carte1[0][i - 1] + carte1[0][i]
+                if ch == "de":
+                    break
+        for i in range(len(carte2[0])):
+            id2 += carte2[0][i]
+            if i > 1:
+                ch = carte2[0][i - 1] + carte2[0][i]
+                if ch == "de":
+                    break
+        if id1 == id2:
+            return True
+        return False
+
+
+
 
     @staticmethod # A modifier quand on aura la classe joueur et croupier
     def coups_possible(main_joueur, historique_coups, main_croupier, nombre_main_joueur):
@@ -52,24 +74,30 @@ class BlackJack:
 
         ##### Partager
 
-        if is_as:
-             if nombre_as == 2:
-                 if "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
-                     liste_coups_possible.append("Partager_pair_as")
-             else:
-                s = 0
-                for carte in main_joueur:
-                    if carte[0][:2] == 'as':
-                        s += 1
-                    else:
-                        s += carte[1][0]
-                if s != 21 and "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
-                    liste_coups_possible.append("Partager")
-        else:
-            if len(main_joueur) > 1:
-                if main_joueur[0][1] == main_joueur[1][1]:
-                    if "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
-                        liste_coups_possible.append("Partager")
+        if len(main_joueur) == 2:
+            if BlackJack.is_pair(main_joueur[0], main_joueur[1]):
+                liste_coups_possible.append("Partager")
+
+
+
+        # if is_as:
+        #      if nombre_as == 2:
+        #          if "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
+        #              liste_coups_possible.append("Partager_pair_as")
+        #      else:
+        #         s = 0
+        #         for carte in main_joueur:
+        #             if carte[0][:2] == 'as':
+        #                 s += 1
+        #             else:
+        #                 s += carte[1][0]
+        #         if s != 21 and "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
+        #             liste_coups_possible.append("Partager")
+        # else:
+        #     if len(main_joueur) > 1:
+        #         if main_joueur[0][1] == main_joueur[1][1]:
+        #             if "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
+        #                 liste_coups_possible.append("Partager")
 
         ##### Assurer
 
@@ -83,12 +111,14 @@ class BlackJack:
 
         ##### Tirer
 
-        if "Partage_pair_as" not in historique_coups:
-            if "Arreter" not in historique_coups:
-                liste_coups_possible.append("Tirer_plusieurs_cartes")
-        else:
-            if "Arreter" not in historique_coups:
-                liste_coups_possible.append("Tirer_une_carte")
+        if "Arreter" not in historique_coups:
+            liste_coups_possible.append("Tirer")
+        # if "Partage_pair_as" not in historique_coups:
+        #     if "Arreter" not in historique_coups:
+        #         liste_coups_possible.append("Tirer_plusieurs_cartes")
+        # else:
+        #     if "Arreter" not in historique_coups:
+        #         liste_coups_possible.append("Tirer_une_carte")
 
         return liste_coups_possible
 
@@ -99,14 +129,14 @@ class BlackJack:
             pass
         elif joueur.mains[numMain].action == "Arreter":
             joueur.mains[numMain].stop = True
-        elif joueur.mains[numMain].action == "Tirer_plusieurs_cartes" or joueur.mains[numMain].action == "Tirer_une_carte":
+        elif joueur.mains[numMain].action == "Tirer":
             joueur.mains[numMain].tirer(self.jeuDeCarte)
         elif joueur.mains[numMain].action == "Partager":
             joueur.partager(numMain)
-        elif joueur.mains[numMain].action == "Partager_pair_as":
-            joueur.mains.partager(numMain)
-        elif joueur.mains[numMain].action == "Partager_pair_as":
-            joueur.mains.partager(numMain)
+        # elif joueur.mains[numMain].action == "Partager_pair_as":
+        #     joueur.mains.partager(numMain)
+        # elif joueur.mains[numMain].action == "Partager_pair_as":
+        #     joueur.mains.partager(numMain)
 
 
     def checkCardsValue(self,main):
