@@ -11,6 +11,6 @@ from BlackJack import BlackJack
 
 # print(BlackJack.coups_possible(main_joueur, historique_coup, main_croupier, 1))
 
-BJ = BlackJack(10)
+BJ = BlackJack(2)
 #Faire la génération de plein de partie pour remplir la matrice du joueur
 

@@ -8,16 +8,12 @@ class BlackJack:
     def __init__(self,nbjoueurs):
 
         #Instanciation des joueurs
-        self.listeParticipants=[]
-        for i in range(nbjoueurs):
-            self.listeParticipants.append(Joueur())
-
-        #Instanciation du croupier qui jouera en dernier
-        self.listeParticipants.append(Croupier())
-
-        self.initialisation_Partie()
+        self.listeParticipants = []
+        # 1- Initialisation jeu de carte
+        self.jeuDeCarte = JeuDeCarte()
+        self.initialisation_Partie(nbjoueurs)
         self.deroulement_Partie()
-
+        self.afficherPartie()
         #Boucle infinie
         #   Initialisation de la partie
 
@@ -70,9 +66,10 @@ class BlackJack:
                 if s != 21 and "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
                     liste_coups_possible.append("Partager")
         else:
-            if main_joueur[0][1] == main_joueur[1][1]:
-                if "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
-                    liste_coups_possible.append("Partager")
+            if len(main_joueur) > 1:
+                if main_joueur[0][1] == main_joueur[1][1]:
+                    if "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
+                        liste_coups_possible.append("Partager")
 
         ##### Assurer
 
@@ -96,114 +93,129 @@ class BlackJack:
         return liste_coups_possible
 
     #Appliquer l'action choisit par le participant en fonction des règles du blackjack
-    def appliquer_Action(self,participant):
-        if (participant.action=="Doubler"):
+    def appliquer_Action(self, joueur, numMain):
+
+        if joueur.mains[numMain].action == "Doubler":
             pass
-        elif (participant.action=="Arreter"):
-            participant.stop=True
-        elif (participant.action=="Tirer_plusieurs_cartes" or participant.action=="Tirer_une_carte"):
-            participant.tirer(self.jeuDeCarte)
-        elif (participant.action=="Partager"):
-            pass
-        elif (participant.action=="Partager_pair_as"):
-            pass
-        elif (participant.action=="Partager_pair_as"):
-            pass        
-        
-    def checkCardsValue(self,participant):
-        if(participant.point[1]>21):
-            if(participant.point[0]>21):
+        elif joueur.mains[numMain].action == "Arreter":
+            joueur.mains[numMain].stop = True
+        elif joueur.mains[numMain].action == "Tirer_plusieurs_cartes" or joueur.mains[numMain].action == "Tirer_une_carte":
+            joueur.mains[numMain].tirer(self.jeuDeCarte)
+        elif joueur.mains[numMain].action == "Partager":
+            joueur.partager(numMain)
+        elif joueur.mains[numMain].action == "Partager_pair_as":
+            joueur.mains.partager(numMain)
+        elif joueur.mains[numMain].action == "Partager_pair_as":
+            joueur.mains.partager(numMain)
+
+
+    def checkCardsValue(self,main):
+        if main.point[1] > 21:
+            if main.point[0] > 21:
                 #Le participant a bust
-                participant.gamestate=2
+                main.gameState = 2
+                main.stop = True
 
     def initialisation_Partie(self, nb_Joueur):
+
         if nb_Joueur <= 0 or nb_Joueur > 7:
             print("Veuillez entrer un nombre de joueur valide (entre 1 et 7 joueur(s)")
             return None
-        listeJoueurs = []
 
-        #1- Initialisation jeu de carte
-        self.jeuDeCarte = JeuDeCarte()
+        for _ in range(nb_Joueur):
+            self.listeParticipants.append(Joueur())
+
+            # Instanciation du croupier qui jouera en dernier
+        self.listeParticipants.append(Croupier())
+
 
         #2- Distribution de deux cartes face visible à chaque joueur
         for participant in self.listeParticipants[:-1]:
-            participant.tirer(self.jeuDeCarte)
-            participant.tirer(self.jeuDeCarte)
+            participant.mains[0].tirer(self.jeuDeCarte)
+            participant.mains[0].tirer(self.jeuDeCarte)
         
         #3- Distribution d'une carte visible au croupier
-        self.listeParticipants[-1].tirer(self.jeuDeCarte)
+        self.listeParticipants[-1].mains[0].tirer(self.jeuDeCarte)
 
 
     def deroulement_Partie(self):
-        result=[]
+        result = []
         #Tant qu'il reste des participants qui jouent
         while(self.listeParticipants[:-1]):
             #Pour chaque joueur de la table
             #A tour de rôle, les joueurs effectuent des actions
             for participant in self.listeParticipants[:-1]:
-                #Définition des actions possibles
-                participant.actions=BlackJack.coups_possible(participant.main,[], self.listeParticipants[-1].main,0)
-                #Choix d'une action par le joueur
+                for i, main in enumerate(participant.mains):
+                    #Définition des actions possibles
+                    main.actions = BlackJack.coups_possible(main.main, [], self.listeParticipants[-1].mains[0].main, 0)
+                    #Choix d'une action par le joueur
 
-                #Choix d'une action aléatoire par le joueur
-                participant.comportement_aleatoire()
-                #Ajout de l'action dans l'historique du joueur
-                participant.historique.append(participant.action)
-                #L'action est joué
-                self.appliquer_Action(participant)
-                #On check la valeur des cartes pour savoir si le joueur n'a pas dépassé 21
-                self.checkCardsValue(participant)
+                    #Choix d'une action aléatoire par le joueur
+                    participant.comportement_aleatoire(i)
+                    #Ajout de l'action dans l'historique du joueur
+                    main.historique.append(main.action)
+                    #L'action est joué
+                    self.appliquer_Action(participant, i)
+                    #On check la valeur des cartes pour savoir si le joueur n'a pas dépassé 21
+                    self.checkCardsValue(main)
+                participant.checkAllStop() #Vérifie si toutes les mains du joueur peuvent jouer
 
             #On enlève de la liste les joueurs ayant dépassé 21 OU ayant souhaité se coucher
-            temp=self.listeParticipants[:-1].copy()
+            temp = self.listeParticipants[:-1].copy()
             for participant in self.listeParticipants[:-1]:
-                if(participant.gamestate==2 or participant.stop==True):
+                if participant.stop:
                     result.append(participant)
                     temp.remove(participant)
-            self.listeParticipants[:-1]=temp
+            self.listeParticipants[:-1] = temp
 
-        self.listeParticipants[:-1]=result
+        self.listeParticipants[:-1] = result
 
         #On fait ensuite jouer le croupier
-        while(self.listeParticipants[-1].gamestate!=2 and self.listeParticipants[-1].stop==False):
+        while(not self.listeParticipants[-1].stop):
             self.listeParticipants[-1].comportement()
 
-            if(self.listeParticipants[-1].gamestate!=2 and self.listeParticipants[-1].stop==False):
-                self.appliquer_Action(self.listeParticipants[-1])
-                self.listeParticipants[-1].historique.append(self.listeParticipants[-1].action)
-
+            if not self.listeParticipants[-1].stop:
+                self.appliquer_Action(self.listeParticipants[-1], 0)
+                self.listeParticipants[-1].mains[0].historique.append(self.listeParticipants[-1].mains[0].action)
+                self.checkCardsValue(self.listeParticipants[-1].mains[0])
+            self.listeParticipants[-1].checkAllStop()
         #On gère la distribution des récompenses à chaque joueur
-        self.listeParticipants[-1].distributionJeton(self.listeParticipants[:-1])
-        pass
+        self.distributionJeton()
 
-    def distributionJeton(self,listeJoueur):
-        for joueur in listeJoueur:
-            #Si le croupier a perdu
-            if(self.gamestate==2):
-                if(min(joueur.point[0], joueur.point[1])<=21):
-                    joueur.gamestate==1
+
+    def distributionJeton(self):
+        for joueur in self.listeParticipants[:-1]:
+            for i, main in enumerate(joueur.mains):
+                #Si le croupier a perdu
+                if self.listeParticipants[-1].mains[0].gameState == 2:
+                    if min(main.point[0], main.point[1]) <= 21:
+                        main.gameState = 1
+                        #Récompense de 5 pour avoir gagné
+                        joueur.solde += joueur.mises[i] * 2
+                    else:
+                        main.gameState = 2
+
+                #Si le joueur a perdu
+                elif main.gameState == 2:
+                    pass
+
+                elif((min(main.point[0], main.point[1]) > min(self.listeParticipants[-1].mains[0].point[0], self.listeParticipants[-1].mains[0].point[1])) or
+                     (max(main.point[0], main.point[1]) > max(self.listeParticipants[-1].mains[0].point[0], self.listeParticipants[-1].mains[0].point[1]))):
+                    main.gameState = 1
                     #Récompense de 5 pour avoir gagné
-                    joueur.solde+=5
+                    joueur.solde += joueur.mises[i] * 2
+
                 else:
-                    joueur.gamestate==2
-                    #Malus de 5 pour avoir perdu
-                    joueur.solde-=5
+                    main.gameState = 2
 
-            #Si le joueur a perdu
-            elif(joueur.gamestate==2):
-                #Malus de 5 pour avoir perdu
-                joueur.solde-=5
 
-            elif((min(joueur.point[0], joueur.point[1])>min(self.point[0], self.point[1]))or(max(joueur.point[0], joueur.point[1])>max(self.point[0], self.point[1]))):
-                joueur.gamestate==1
-                #Récompense de 5 pour avoir gagné
-                joueur.solde+=5
-
+    def afficherPartie(self):
+        for i, joueur in enumerate(self.listeParticipants):
+            if i <len(self.listeParticipants)-1:
+                print("Joueur : ", i, " Solde : ", joueur.solde)
             else:
-
-                joueur.gamestate==2
-                #Malus de 5 pour avoir perdu
-                joueur.solde-=5
-
-
-
+                print("Croupier")
+            for j, main in enumerate(joueur.mains):
+                print("Main : ", j)
+                print(main.main)
+                print("score : ", main.point)

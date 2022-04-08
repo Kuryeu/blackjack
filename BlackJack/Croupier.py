@@ -6,17 +6,21 @@ class Croupier(Participant):
 
     def comportement(self):
 
-        if len(self.mains[0]) in [0, 1]:
-            self.action="Tirer_une_carte"
+        if len(self.mains[0].main) in [1, 2]:
+            self.mains[0].action = "Tirer_une_carte"
 
-        elif self.point[1] > 21 and self.point[0] > 21:
+        elif self.mains[0].point[1] > 21 and self.mains[0].point[0] > 21:
             #Le croupier a perdu
-            self.gamestate=2
+            self.mains[0].gamestate = 2
+            self.mains[0].stop = True
+            self.mains[0].action = "Arreter"
 
-        elif max(self.point[0], self.point[1]) >= 17:
-            self.stop=True
+        elif max(self.mains[0].point[0], self.mains[0].point[1]) >= 17:
+            self.mains[0].stop = True
+            self.mains[0].action = "Arreter"
         else:
-            self.action="Tirer_une_carte"
+
+            self.mains[0].action = "Tirer_une_carte"
 
 
 
