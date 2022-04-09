@@ -14,7 +14,7 @@ class BlackJack:
         self.jeuDeCarte = JeuDeCarte()
         self.initialisation_Partie(nbjoueurs)
         self.deroulement_Partie()
-        self.afficherPartie()
+        #self.afficherPartie()
 
         self.calculerScores()
         #Boucle infinie
@@ -137,7 +137,7 @@ class BlackJack:
         elif joueur.mains[numMain].action == "Tirer":
             joueur.mains[numMain].tirer(self.jeuDeCarte)
         elif joueur.mains[numMain].action == "Partager":
-            joueur.partager(numMain)
+            joueur.partager(self.jeuDeCarte, numMain)
         # elif joueur.mains[numMain].action == "Partager_pair_as":
         #     joueur.mains.partager(numMain)
         # elif joueur.mains[numMain].action == "Partager_pair_as":
@@ -186,7 +186,7 @@ class BlackJack:
                     #Choix d'une action par le joueur
 
                     #Choix d'une action aléatoire par le joueur
-                    participant.comportement_aleatoire(i)
+                    participant.comportement_sto(i, self.memoire, self.listeParticipants[-1].mains[0].main)
                     #Ajout de l'action dans l'historique du joueur
                     main.historique.append(main.action)
                     #L'action est joué
@@ -260,7 +260,7 @@ class BlackJack:
         for i in range(len(self.listeParticipants[:-1])):
             for j in range(len(self.listeParticipants[i].mains)):
                 score = self.calculerScore(i, j)
-                print(score)
+                #print(score)
                 self.memoire.placerScore(self.listeParticipants[i].mains[j].main,
                                          self.listeParticipants[-1].mains[0].main,
                                          self.listeParticipants[i].mains[j].historique, score)

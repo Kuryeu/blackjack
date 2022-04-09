@@ -29,8 +29,8 @@ class JeuDeCarte:
 
     def melanger_cartes(self):
         random.shuffle(self.cartes)
-        print("le jeu a été mélangé")
+        #print("le jeu a été mélangé")
 
     def bruler_carte(self):
         self.cartes.remove(self.cartes[-1])
-        print("Une carte a été brûlée")
+        #print("Une carte a été brûlée")

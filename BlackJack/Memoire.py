@@ -133,42 +133,52 @@ class Memoire:
 
     def placerScore(self, main_Joueur, main_croupier, historique, score):
         i, j, k = Memoire.whereToPlace(main_Joueur, main_croupier, historique)
-        print("IJK", i, j, k)
+        #print("IJK", i, j, k)
         self.matrice[i,j,k] = (self.matrice[i,j,k] + score)/2
 
 
-    def findBestActionSto(self, main_Joueur, main_croupier):
+    def findBestActionSto(self, main_Joueur, main_croupier, actions):
         coupsPossibles = self.findBestCoupsPossibles(main_Joueur, main_croupier)
-
-        coupsPossibles = np.copy(coupsPossibles)
+        coupsPossibles = np.array(coupsPossibles)
         if min(coupsPossibles) < 0:
-            coupsPossibles += min(coupsPossibles) + 1
+            coupsPossibles -= min(coupsPossibles)
+        coupsPossibles += 1
 
-        coupsPossibles /= sum(coupsPossibles)
-        r = random.random()
-        if r < coupsPossibles[0]:
-            return "Tirer"
-        elif r < coupsPossibles[0] + coupsPossibles[1]:
-            return "Partager"
-        elif r < coupsPossibles[0] + coupsPossibles[1] + coupsPossibles[2]:
-            return "Doubler"
+        if sum(coupsPossibles) == 0:
+            return random.choice(actions)
         else:
-            return "Rester"
+            coupsPossibles /= sum(coupsPossibles)
 
+        action = ""
+        while(action not in actions):
+            r = random.random()
+            if r < coupsPossibles[0]:
+                action = "Tirer"
+            elif r < coupsPossibles[0] + coupsPossibles[1]:
+                action = "Partager"
+            elif r < coupsPossibles[0] + coupsPossibles[1] + coupsPossibles[2]:
+                action = "Doubler"
+            else:
+                action = "Rester"
+        return action
 
-    def findBestActionDeter(self, main_Joueur, main_croupier):
+    def findBestActionDeter(self, main_Joueur, main_croupier, actions):
         coupsPossibles = self.findBestCoupsPossibles(main_Joueur, main_croupier)
-        valMax = max(coupsPossibles)
-        k = coupsPossibles.index(valMax)
-
-        if k == 0:
-            return "Tirer"
-        elif k == 1:
-            return "Partager"
-        elif k == 2:
-            return "Doubler"
-        elif k == 3:
-            return "Rester"
+        coupsPossibles = [cp for cp in coupsPossibles]
+        action = ""
+        while(action not in actions):
+            valMax = max(coupsPossibles)
+            k = coupsPossibles.index(valMax)
+            if k == 0:
+                action = "Tirer"
+            elif k == 1:
+                action = "Partager"
+            elif k == 2:
+                action = "Doubler"
+            elif k == 3:
+                action = "Rester"
+            coupsPossibles.pop(k)
+        return action
 
     def findBestCoupsPossibles(self, main_Joueur, main_croupier):
         i = 0
@@ -257,9 +267,12 @@ class Memoire:
             s1 = 0
             s2 = 0
             for i in range(len(cartes_Joueur)):
-                s1 += cartes_Joueur[i][1][0]
-                s2 += cartes_Joueur[i][1][1]
-
+                if len(cartes_Joueur[i][1]) == 2:
+                    s1 += cartes_Joueur[i][1][0]
+                    s2 += cartes_Joueur[i][1][1]
+                else:
+                    s1 += cartes_Joueur[i][1][0]
+                    s2 += cartes_Joueur[i][1][0]
             if s2 > 21:
                 if s1 == 5:
                     i = 19

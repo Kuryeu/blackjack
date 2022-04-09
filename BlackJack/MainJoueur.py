@@ -31,13 +31,13 @@ class MainJoueur:
             self.point[1] += self.main[-1][1][1]
 
     def rester(self):
-        print("le joueur reste")
+        #print("le joueur reste")
         self.stop = True
         return "le joueur reste"
 
     def abandonner(self):
         #quitter la game
-        print("le joueur abandonne")
+        #print("le joueur abandonne")
         self.stop = True
         return "le joueur abandonne"
 
