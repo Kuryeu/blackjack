@@ -1,6 +1,5 @@
-from JeuDeCarte import JeuDeCarte
 from BlackJack import BlackJack
-
+from Memoire import Memoire
 
 # jeuDeCarte1 = JeuDeCarte()
 
@@ -11,9 +10,9 @@ from BlackJack import BlackJack
 
 # print(BlackJack.coups_possible(main_joueur, historique_coup, main_croupier, 1))
 
-BJ = BlackJack(2)
 
+BJ = BlackJack(2, Memoire())
 
-
+print(BJ.memoire)
 #Faire la génération de plein de partie pour remplir la matrice du joueur
 

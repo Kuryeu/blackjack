@@ -5,17 +5,22 @@ from Croupier import Croupier
 
 class BlackJack:
 
-    def __init__(self,nbjoueurs):
+    def __init__(self,nbjoueurs, memoire):
 
         #Instanciation des joueurs
         self.listeParticipants = []
         # 1- Initialisation jeu de carte
+        self.memoire = memoire
         self.jeuDeCarte = JeuDeCarte()
         self.initialisation_Partie(nbjoueurs)
         self.deroulement_Partie()
         self.afficherPartie()
+
+        self.calculerScores()
         #Boucle infinie
         #   Initialisation de la partie
+
+
 
     @staticmethod
     def is_pair(carte1, carte2):
@@ -126,7 +131,7 @@ class BlackJack:
     def appliquer_Action(self, joueur, numMain):
 
         if joueur.mains[numMain].action == "Doubler":
-            pass
+            joueur.doublerMise(self.jeuDeCarte, numMain)
         elif joueur.mains[numMain].action == "Arreter":
             joueur.mains[numMain].stop = True
         elif joueur.mains[numMain].action == "Tirer":
@@ -249,3 +254,53 @@ class BlackJack:
                 print("Main : ", j)
                 print(main.main)
                 print("score : ", main.point)
+
+
+    def calculerScores(self):
+        for i in range(len(self.listeParticipants[:-1])):
+            for j in range(len(self.listeParticipants[i].mains)):
+                score = self.calculerScore(i, j)
+                print(score)
+                self.memoire.placerScore(self.listeParticipants[i].mains[j].main,
+                                         self.listeParticipants[-1].mains[0].main,
+                                         self.listeParticipants[i].mains[j].historique, score)
+
+    def calculerScore(self, indicejoueur, indicemain):
+        """ Quand on va ajouter dans le tableau on va moyenner à fois
+        Si Gagner :
+            Si blackJack:
+                - BlackJack = 5
+            Sinon :
+                - Différence au blackjack = (21 - points) / 5
+        Si Perdre :
+            Si BlackJack Croupier :
+                - BlackJack Croupier = -5
+            Sinon :
+                - Différence au blackjack = - (points - 21) / 5
+
+        :return:
+        """
+        main = self.listeParticipants[indicejoueur].mains[indicemain]
+        croupier = self.listeParticipants[-1]
+        score = 0
+        #Le joueur a gagné
+        if croupier.mains[0].gameState == 2 and main.gameState == 1:
+            if main.point[0] == 21 or main.point[1] == 21:
+                score += 5
+            else:
+                if main.point[1] > 21:
+                    score += (21 - main.point[0]) / 5
+                else:
+                    score += (21 - main.point[1]) / 5
+        # Le joueur a perdu
+        elif main.gameState == 2:
+            if croupier.mains[0].point[0] == 21 or croupier.mains[0].point[1] == 21:
+                score -= 5
+            else:
+                if main.point[0] >= 21:
+                    score -= (main.point[0] - 21) / 5
+                else:
+                    score -= (croupier.mains[0].point[1] - main.point[0]) / 5
+
+        return score
+

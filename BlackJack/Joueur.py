@@ -21,15 +21,11 @@ class Joueur(Participant):
             self.mains[num_main].action  = random.choice( self.mains[num_main].actions)
         pass
 
-    def comportement_intelligent(self):
+    def comportement_sto(self):
         pass
 
-    def remplir_matrice(self, resultat_Partie):
+    def comportement_deter(self):
         pass
-
-    def exporter_matrice(self):
-        pass
-
 
     def doublerMise(self, jeu_de_carte, num_main):
         self.mises[num_main] *= 2 #Ajout
