@@ -19,8 +19,9 @@ class Croupier(Participant):
             self.mains[0].stop = True
             self.mains[0].action = "Arreter"
         else:
-
             self.mains[0].action = "Tirer"
+
+
 
 
 

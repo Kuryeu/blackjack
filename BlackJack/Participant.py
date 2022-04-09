@@ -13,3 +13,4 @@ class Participant:
                 self.stop = False
                 return
         self.stop = True
+

@@ -19,13 +19,17 @@ class Joueur(Participant):
             self.mains[num_main].action = input("{}".format(self.mains[num_main].main))
         else:
             self.mains[num_main].action  = random.choice( self.mains[num_main].actions)
-        pass
 
-    def comportement_sto(self):
-        pass
+    def comportement_sto(self, num_main, matrice, main_Croupier):
+        main_Joueur = self.mains[num_main]
+        action = matrice.findBestActionSto(main_Joueur, main_Croupier)
+        self.mains[num_main].action = action
 
-    def comportement_deter(self):
-        pass
+    def comportement_deter(self, num_main, matrice, main_Croupier):
+        main_Joueur = self.mains[num_main]
+        action = matrice.findBestActionDeter(main_Joueur, main_Croupier)
+        self.mains[num_main].action = action
+
 
     def doublerMise(self, jeu_de_carte, num_main):
         self.mises[num_main] *= 2 #Ajout
