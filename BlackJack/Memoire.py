@@ -351,3 +351,22 @@ class Memoire:
 
         return self.matrice[i,j]
 
+    def transformation_resultat(self):
+        resultat = [[[1] for i in range(10)] for j in range(32)]
+        for i in range(32):
+            for j in range(10):
+                maxValue = max(self.matrice[i, j])
+                k = np.argmax(self.matrice[i, j]==maxValue)
+                if k == 0:
+                    action = "T"
+                elif k == 1:
+                    action = "P"
+                elif k == 2:
+                    action = "D"
+                elif k == 3:
+                    action = "R"
+                resultat[i][j] = action
+        return(resultat)
+
+
+
