@@ -14,7 +14,7 @@ class Joueur(Participant):
 
 
     def comportement_aleatoire(self, num_main):
-        print(self.mains[num_main].actions)
+        #print(self.mains[num_main].actions)
         # if "Partager" in self.mains[num_main].actions:
         #     self.mains[num_main].action = input("{}".format(self.mains[num_main].main))
         # else:
@@ -51,7 +51,7 @@ class Joueur(Participant):
             self.mises.append(5)
             self.solde -= 5
             self.mains[num_main].tirer(jeu_de_carte)
-            self.mains[num_main+1].tirer(jeu_de_carte)
+            self.mains[-1].tirer(jeu_de_carte)
             #print("le joueur partage sa main")
             return "le joueur partage sa main"
         else:

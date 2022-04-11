@@ -62,16 +62,24 @@ def afficher_resultat(matrice):
     print("R : Rester")
 
 
-memo = LoadMatrice()
+#memo = LoadMatrice()
+memo = Memoire()
+comportement_aleatoire = True
 
-for _ in range(10000):
-    memo = BlackJack(2, memo).memoire
+# for _ in range(1000000):
+#     memo = BlackJack(3, memo, comportement_aleatoire).memoire
+# comportement_aleatoire = False
+# afficher_resultat(memo.transformation_resultat())
+# saveMatrice(memo.matrice)
+#
+# memo = LoadMatrice()
+comportement_aleatoire = True
+for _ in range(1000000):
+    memo = BlackJack(7, memo, comportement_aleatoire).memoire
 
 saveMatrice(memo.matrice)
+
 afficher_resultat(memo.transformation_resultat())
 
 
-
-
-#Faire la génération de plein de partie pour remplir la matrice du joueur
 

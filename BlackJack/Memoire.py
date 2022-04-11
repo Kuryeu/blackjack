@@ -19,6 +19,8 @@ class Memoire:
         cartes_Joueur = main_Joueur[:2]
         cartes_Croupier = main_croupier[:1]
 
+        # if len(cartes_Joueur)==1:
+        #     input()
         if BlackJack.is_pair(cartes_Joueur[0], cartes_Joueur[1]):
             if cartes_Joueur[0][1][0] == 1:
                 i = 9

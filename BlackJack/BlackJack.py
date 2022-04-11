@@ -5,12 +5,13 @@ from Croupier import Croupier
 
 class BlackJack:
 
-    def __init__(self,nbjoueurs, memoire):
+    def __init__(self,nbjoueurs, memoire, compotement_aleatoire):
 
         #Instanciation des joueurs
         self.listeParticipants = []
         # 1- Initialisation jeu de carte
         self.memoire = memoire
+        self.comportement_aleatoire = compotement_aleatoire
         self.jeuDeCarte = JeuDeCarte()
         self.initialisation_Partie(nbjoueurs)
         self.deroulement_Partie()
@@ -181,21 +182,31 @@ class BlackJack:
             #A tour de rôle, les joueurs effectuent des actions
             for participant in self.listeParticipants[:-1]:
                 for i, main in enumerate(participant.mains):
-                    #Définition des actions possibles
-                    main.actions = BlackJack.coups_possible(main.main, [], self.listeParticipants[-1].mains[0].main, 0)
-                    #Choix d'une action par le joueur
+                    if not participant.mains[i].stop:
+                        #Définition des actions possibles
 
-                    #Choix d'une action aléatoire par le joueur
-                    participant.comportement_sto(i, self.memoire, self.listeParticipants[-1].mains[0].main)
-                    #Ajout de l'action dans l'historique du joueur
-                    main.historique.append(main.action)
-                    #L'action est joué
-                    self.appliquer_Action(participant, i)
-                    #On check la valeur des cartes pour savoir si le joueur n'a pas dépassé 21
-                    self.checkCardsValue(main)
+                        main.actions = BlackJack.coups_possible(main.main, [], self.listeParticipants[-1].mains[0].main, 0)
+
+                        if self.comportement_aleatoire: #Choix d'une action aléatoire par le joueur
+                            participant.comportement_aleatoire(i)
+                        else: #Choix d'une action par le joueur
+                            participant.comportement_sto(i, self.memoire, self.listeParticipants[-1].mains[0].main)
+
+                        #Ajout de l'action dans l'historique du joueur
+
+                        main.historique.append(main.action)
+
+                        #L'action est joué
+
+                        self.appliquer_Action(participant, i)
+
+                        #On check la valeur des cartes pour savoir si le joueur n'a pas dépassé 21
+
+                        self.checkCardsValue(main)
                 participant.checkAllStop() #Vérifie si toutes les mains du joueur peuvent jouer
 
             #On enlève de la liste les joueurs ayant dépassé 21 OU ayant souhaité se coucher
+
             temp = self.listeParticipants[:-1].copy()
             for participant in self.listeParticipants[:-1]:
                 if participant.stop:
@@ -289,9 +300,9 @@ class BlackJack:
                 score += 5
             else:
                 if main.point[1] > 21:
-                    score += (21 - main.point[0]) / 5
+                    score += (main.point[0]) / 5
                 else:
-                    score += (21 - main.point[1]) / 5
+                    score += (main.point[1]) / 5
         # Le joueur a perdu
         elif main.gameState == 2:
             if croupier.mains[0].point[0] == 21 or croupier.mains[0].point[1] == 21:
