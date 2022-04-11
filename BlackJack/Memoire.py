@@ -8,6 +8,9 @@ class Memoire:
 
     def __init__(self):
         self.matrice = np.zeros((32, 10, 4), dtype=float)
+        self.heatmap = np.zeros((32, 10, 4), dtype=int)
+        self.total_win = 0
+        self.total_main_joue = 0
 
     @staticmethod
     def whereToPlace(main_Joueur, main_croupier, historique):
@@ -137,6 +140,7 @@ class Memoire:
         i, j, k = Memoire.whereToPlace(main_Joueur, main_croupier, historique)
         #print("IJK", i, j, k)
         self.matrice[i,j,k] = (self.matrice[i,j,k] + score)/2
+        self.heatmap[i,j,k] += 1
 
 
     def findBestActionSto(self, main_Joueur, main_croupier, actions):
@@ -370,5 +374,14 @@ class Memoire:
                 resultat[i][j] = action
         return(resultat)
 
+    def transformation_heatmap(self):
+        result = np.zeros((32, 10))
+        s = 0
+        for i in range(32):
+            for j in range(10):
+                s += sum(self.heatmap[i, j])
+                result[i, j] = sum(self.heatmap[i, j])
+        return (result / np.amax(result))*100
 
-
+    def winRate(self):
+        return self.total_win / self.total_main_joue

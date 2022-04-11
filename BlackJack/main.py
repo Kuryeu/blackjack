@@ -1,6 +1,8 @@
 from BlackJack import BlackJack
 from Memoire import Memoire
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
 # jeuDeCarte1 = JeuDeCarte()
 
 
@@ -12,13 +14,13 @@ import numpy as np
 
 def saveMatrice(matrice):
     matriceReshape = np.copy(matrice)
-    np.savez("matrice.npz", Tirer=matriceReshape[:, :, 0], Partager=matriceReshape[:, :, 1],
+    np.savez("matriceSto.npz", Tirer=matriceReshape[:, :, 0], Partager=matriceReshape[:, :, 1],
              Doubler=matriceReshape[:, :, 2], Rester=matriceReshape[:, :, 3])
 
 
 def LoadMatrice():
     mat = Memoire()
-    data = np.load("matrice.npz", allow_pickle=True)
+    data = np.load("matriceAlea.npz", allow_pickle=True)
     mat.matrice[:, :, 0] = data['Tirer']
     mat.matrice[:, :, 1] = data['Partager']
     mat.matrice[:, :, 2] = data['Doubler']
@@ -62,9 +64,14 @@ def afficher_resultat(matrice):
     print("R : Rester")
 
 
-#memo = LoadMatrice()
-memo = Memoire()
-comportement_aleatoire = True
+
+
+
+
+
+memo = LoadMatrice()
+#memo = Memoire()
+comportement_aleatoire = False
 
 # for _ in range(1000000):
 #     memo = BlackJack(3, memo, comportement_aleatoire).memoire
@@ -73,13 +80,33 @@ comportement_aleatoire = True
 # saveMatrice(memo.matrice)
 #
 # memo = LoadMatrice()
-comportement_aleatoire = True
-for _ in range(1000000):
-    memo = BlackJack(7, memo, comportement_aleatoire).memoire
 
-saveMatrice(memo.matrice)
+for _ in range(100000):
+    memo = BlackJack(4, memo, comportement_aleatoire).memoire
 
+#saveMatrice(memo.matrice)
+print("Le taux de victoire est de : ", memo.winRate()*100, "%")
+
+"""
 afficher_resultat(memo.transformation_resultat())
 
+oui = memo.transformation_heatmap()
 
+index_colonne = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'A']
+index_ligne = ['17+', '16', '15', '14', '13', '12', '11', '10',
+                '9', '8', '7', '6', '5', 'A-10', 'A-9', 'A-8',
+                'A-7', 'A-6', 'A-5', 'A-4', 'A-3', 'A-2', 'A-A', '10-10',
+                '9-9', '8-8', '7-7', '6-6', '5-5', '4-4', '3-3', '2-2']
+index_ligne.reverse()
+
+
+
+plt.imshow(oui)
+plt.xticks(np.arange(len(index_colonne)), index_colonne)
+plt.xlabel("Croupier")
+plt.yticks(np.arange(len(index_ligne)), index_ligne)
+plt.ylabel("Joueur")
+plt.colorbar()
+plt.show()
+"""
 

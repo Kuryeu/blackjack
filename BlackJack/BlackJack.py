@@ -17,7 +17,8 @@ class BlackJack:
         self.deroulement_Partie()
         #self.afficherPartie()
 
-        self.calculerScores()
+        #self.calculerScores()
+        self.ResultatPartie()
         #Boucle infinie
         #   Initialisation de la partie
 
@@ -190,8 +191,8 @@ class BlackJack:
                         if self.comportement_aleatoire: #Choix d'une action aléatoire par le joueur
                             participant.comportement_aleatoire(i)
                         else: #Choix d'une action par le joueur
-                            participant.comportement_sto(i, self.memoire, self.listeParticipants[-1].mains[0].main)
-
+                            #participant.comportement_sto(i, self.memoire, self.listeParticipants[-1].mains[0].main)
+                            participant.comportement_deter(i, self.memoire, self.listeParticipants[-1].mains[0].main)
                         #Ajout de l'action dans l'historique du joueur
 
                         main.historique.append(main.action)
@@ -257,7 +258,7 @@ class BlackJack:
 
     def afficherPartie(self):
         for i, joueur in enumerate(self.listeParticipants):
-            if i <len(self.listeParticipants)-1:
+            if i < len(self.listeParticipants)-1:
                 print("Joueur : ", i, " Solde : ", joueur.solde)
             else:
                 print("Croupier")
@@ -294,6 +295,7 @@ class BlackJack:
         main = self.listeParticipants[indicejoueur].mains[indicemain]
         croupier = self.listeParticipants[-1]
         score = 0
+
         #Le joueur a gagné
         if croupier.mains[0].gameState == 2 and main.gameState == 1:
             if main.point[0] == 21 or main.point[1] == 21:
@@ -314,4 +316,12 @@ class BlackJack:
                     score -= (croupier.mains[0].point[1] - main.point[0]) / 5
 
         return score
+
+
+    def ResultatPartie(self):
+        for joueur in self.listeParticipants[:-1]:
+            for main in joueur.mains:
+                self.memoire.total_main_joue += 1
+                if main.gameState == 1:
+                    self.memoire.total_win += 1
 
