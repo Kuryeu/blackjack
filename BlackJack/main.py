@@ -14,7 +14,7 @@ import matplotlib
 
 def saveMatrice(matrice):
     matriceReshape = np.copy(matrice)
-    np.savez("matriceSto.npz", Tirer=matriceReshape[:, :, 0], Partager=matriceReshape[:, :, 1],
+    np.savez("matriceAlea.npz", Tirer=matriceReshape[:, :, 0], Partager=matriceReshape[:, :, 1],
              Doubler=matriceReshape[:, :, 2], Rester=matriceReshape[:, :, 3])
 
 
@@ -34,6 +34,7 @@ def afficher_resultat(matrice):
                    '15 : A-7 ||', '14 : A-6 ||', '13 : A-5 ||', '12 : A-4 ||', '11 : A-3 ||', '10 : A-2 ||', '9 : A-A  ||', '8 : 10-10||',
                    '7 : 9-9  ||', '6 : 8-8  ||', '5 : 7-7  ||', '4 : 6-6  ||', '3 : 5-5  ||', '2 : 4-4  ||', '1 : 3-3  ||', '0 : 2-2  ||']
     print("         ||", end=" ")
+    index_ligne.reverse()
     for i in range(len(index_colonne)):
         print(i, end=" |")
     print("")
@@ -73,23 +74,16 @@ memo = LoadMatrice()
 #memo = Memoire()
 comportement_aleatoire = False
 
-# for _ in range(1000000):
-#     memo = BlackJack(3, memo, comportement_aleatoire).memoire
-# comportement_aleatoire = False
-# afficher_resultat(memo.transformation_resultat())
-# saveMatrice(memo.matrice)
-#
-# memo = LoadMatrice()
-
 for _ in range(100000):
-    memo = BlackJack(4, memo, comportement_aleatoire).memoire
+    memo = BlackJack(3, memo, comportement_aleatoire).memoire
 
+afficher_resultat(memo.transformation_resultat())
+print(memo.winRate()*100, "%")
 #saveMatrice(memo.matrice)
-print("Le taux de victoire est de : ", memo.winRate()*100, "%")
+
+
 
 """
-afficher_resultat(memo.transformation_resultat())
-
 oui = memo.transformation_heatmap()
 
 index_colonne = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'A']

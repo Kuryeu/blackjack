@@ -131,7 +131,7 @@ class Memoire:
             k = 1
         elif historique[0] == "Doubler":
             k = 2
-        elif historique[0] == "Rester":
+        elif historique[0] == "Arreter":
             k = 3
 
         return i, j, k
@@ -165,7 +165,7 @@ class Memoire:
             elif r < coupsPossibles[0] + coupsPossibles[1] + coupsPossibles[2]:
                 action = "Doubler"
             else:
-                action = "Rester"
+                action = "Arreter"
         return action
 
     def findBestActionDeter(self, main_Joueur, main_croupier, actions):
@@ -182,7 +182,7 @@ class Memoire:
             elif k == 2:
                 action = "Doubler"
             elif k == 3:
-                action = "Rester"
+                action = "Arreter"
             coupsPossibles.pop(k)
         return action
 
