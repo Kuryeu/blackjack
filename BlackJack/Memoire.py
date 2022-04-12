@@ -5,40 +5,42 @@ import numpy as np
 import random
 
 class Memoire:
-    actionSet = ["Tirer", "Partager", "Doubler", "Rester"]
+    actionSet = ["Tirer", "Partager", "Doubler", "Arreter"]
 
     def __init__(self):
         self.matrice = np.zeros((32, 10), dtype=int)
+        self.Placed = np.zeros((32, 10), dtype=bool)
         self.total_win = 0
         self.total_main_joue = 0
         self.score = 0
-    def creerMatriceRandom(self, main_Joueur, main_croupier, actions):
 
-        i, j = self.findBestCoupsPossibles(main_Joueur, main_croupier)
-        action = random.choice(actions)
+    def placerComportement(self, main_Joueur, main_croupier, action):
+        i, j = self.findIndiceSituation(main_Joueur, main_croupier)
         self.matrice[i, j] = Memoire.actionSet.index(action)
+        self.Placed[i, j] = True
 
+    def isAllPlaced(self):
 
+        return np.all(self.Placed)
 
     def findBestActionDeter(self, main_Joueur, main_croupier, actions):
-        coupsPossibles = self.findBestCoupsPossibles(main_Joueur, main_croupier)
-        coupsPossibles = [cp for cp in coupsPossibles]
+
+        i,j = self.findIndiceSituation(main_Joueur, main_croupier)
         action = ""
-        while(action not in actions):
-            valMax = max(coupsPossibles)
-            k = coupsPossibles.index(valMax)
+        k = self.matrice[i, j]
+        while action not in actions:
             if k == 0:
                 action = "Tirer"
             elif k == 1:
                 action = "Partager"
             elif k == 2:
                 action = "Doubler"
-            elif k == 3:
-                action = "Rester"
-            coupsPossibles.pop(k)
+            else:
+                action = "Arreter"
+            k = random.randint(0, 3)
         return action
 
-    def findBestCoupsPossibles(self, main_Joueur, main_croupier):
+    def findIndiceSituation(self, main_Joueur, main_croupier):
         i = 0
         j = 0
         ### Partie Joueur ###
@@ -207,14 +209,14 @@ class Memoire:
         elif cartes_Croupier[0][1][0] == 10:
             j = 8
 
-        return self.matrice[i,j]
+        return i, j
 
     def transformation_resultat(self):
         resultat = [[[1] for i in range(10)] for j in range(32)]
         for i in range(32):
             for j in range(10):
                 maxValue = max(self.matrice[i, j])
-                k = np.argmax(self.matrice[i, j]==maxValue)
+                k = np.argmax(self.matrice[i, j] == maxValue)
                 if k == 0:
                     action = "T"
                 elif k == 1:

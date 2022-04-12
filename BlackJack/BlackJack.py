@@ -14,13 +14,21 @@ class BlackJack:
         self.comportement_aleatoire = compotement_aleatoire
         self.jeuDeCarte = JeuDeCarte()
         self.initialisation_Partie(nbjoueurs)
-        self.deroulement_Partie()
-        #self.afficherPartie()
 
-        #self.calculerScores()
+    def PartieNormale(self):
+        self.deroulement_Partie()
         self.ResultatPartie()
-        #Boucle infinie
-        #   Initialisation de la partie
+        return self.memoire
+
+    def PartiePopInitiale(self):
+        for participant in self.listeParticipants[:-1]:
+            for i, main in enumerate(participant.mains):
+                # Définition des actions possibles
+                main.actions = BlackJack.coups_possible(main.main, [], self.listeParticipants[-1].mains[0].main, 0)
+                participant.comportement_aleatoire(i)
+                self.memoire.placerComportement(main.main, self.listeParticipants[-1].mains[0].main, main.action)
+        return self.memoire
+
 
 
 
@@ -106,15 +114,6 @@ class BlackJack:
         #             if "Partage_pair_as" not in historique_coups and nombre_main_joueur < 4:
         #                 liste_coups_possible.append("Partager")
 
-        ##### Assurer
-
-        croupier_a_as = False
-        for carte in main_croupier:
-            if carte[0][:2] == 'as':
-                croupier_a_as = True
-
-        if croupier_a_as:
-            liste_coups_possible.append("Assurer")
 
         ##### Tirer
 
@@ -187,12 +186,7 @@ class BlackJack:
                         #Définition des actions possibles
 
                         main.actions = BlackJack.coups_possible(main.main, [], self.listeParticipants[-1].mains[0].main, 0)
-
-                        if self.comportement_aleatoire: #Choix d'une action aléatoire par le joueur
-                            participant.comportement_aleatoire(i)
-                        else: #Choix d'une action par le joueur
-                            #participant.comportement_sto(i, self.memoire, self.listeParticipants[-1].mains[0].main)
-                            participant.comportement_deter(i, self.memoire, self.listeParticipants[-1].mains[0].main)
+                        participant.comportement_deter(i, self.memoire, self.listeParticipants[-1].mains[0].main)
                         #Ajout de l'action dans l'historique du joueur
 
                         main.historique.append(main.action)

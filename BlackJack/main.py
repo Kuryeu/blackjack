@@ -3,6 +3,7 @@ from Memoire import Memoire
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
+from Genetique import Genetique
 # jeuDeCarte1 = JeuDeCarte()
 
 
@@ -64,29 +65,10 @@ def afficher_resultat(matrice):
     print("R : Rester")
 
 
+memo = Genetique(10, 0.5, 0.2).best
 
-
-
-
-
-memo = LoadMatrice()
-#memo = Memoire()
-comportement_aleatoire = False
-
-# for _ in range(1000000):
-#     memo = BlackJack(3, memo, comportement_aleatoire).memoire
-# comportement_aleatoire = False
-# afficher_resultat(memo.transformation_resultat())
-# saveMatrice(memo.matrice)
-#
-# memo = LoadMatrice()
-
-for _ in range(100000):
-    memo = BlackJack(4, memo, comportement_aleatoire).memoire
-
-#saveMatrice(memo.matrice)
-print("Le taux de victoire est de : ", memo.winRate()*100, "%")
-
+afficher_resultat(memo[0].transformation_resultat())
+print("Best Pourcent :", memo[1]*100, "%")
 """
 afficher_resultat(memo.transformation_resultat())
 
